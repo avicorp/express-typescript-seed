@@ -24,6 +24,7 @@ import { MailerService } from './express/services/mailer';
 import { MongoDbService } from './express/services/mongodb';
 import { TYPES } from './constants';
 // import the controller
+import './express/controllers/user';
 import './express/controllers/auth';
 import './express/controllers/health';
 import './express/controllers/error';
@@ -44,7 +45,7 @@ const logger: Logger = createLogger(<LoggerOptions>{
         fmt,
     ),
     transports: [
-        new transports.Console({ level: 'info' }),
+        new transports.Console({ level: 'debug' }),
         // new transports.File({ filename: 'sample-app.log' }),
     ],
 });
@@ -66,11 +67,11 @@ const logger: Logger = createLogger(<LoggerOptions>{
     container.bind<ErrorDescriptionRepository>(TYPES.ErrorDescriptionRepository).to(ErrorDescriptionRepository).inSingletonScope();
 
     // bind other services
-    container.bind<DateTimeService>(TYPES.DateTimeService).to(DateTimeService).inSingletonScope();
+    // container.bind<DateTimeService>(TYPES.DateTimeService).to(DateTimeService).inSingletonScope();
     container.bind<ErrorHandlerService>(TYPES.ErrorHandlerService).to(ErrorHandlerService).inSingletonScope();
-    container.bind<GoogleMapService>(TYPES.GoogleMapService).to(GoogleMapService).inSingletonScope();
+    // container.bind<GoogleMapService>(TYPES.GoogleMapService).to(GoogleMapService).inSingletonScope();
     container.bind<JsonWebTokenService>(TYPES.JsonWebTokenService).to(JsonWebTokenService).inSingletonScope();
-    container.bind<MailerService>(TYPES.MailerService).to(MailerService).inSingletonScope();
+    // container.bind<MailerService>(TYPES.MailerService).to(MailerService).inSingletonScope();
     container.bind<MongoDbService>(TYPES.MongoDbService).to(MongoDbService).inSingletonScope();
     container.bind<PassportService>(TYPES.PassportService).to(PassportService).inSingletonScope();
 

@@ -90,4 +90,24 @@ export class AuthController {
         });
     }
 
+    // @httpPost('/unregister')
+    // public async unregister(
+    //     @request() req: Request,
+    //     @response() res: Response,
+    //     @next() next: NextFunction,
+    // ) {
+    //     const user = await new Promise<IUser>((resolve, reject) => {
+    //         passport.authenticate('unregister', (err, user, info) => {
+    //             if (err) {
+    //                 return reject(err);
+    //             }
+    //             return resolve(user);
+    //         })(req, res, next);
+    //     });
+    //     return res.send(<AuthResponse> {
+    //         user,
+    //         // @ts-ignore
+    //         jwt: await this.jwt.sign(user._id)
+    //     });
+    // }
 }

@@ -27,24 +27,31 @@ export class AuthMiddleware extends BaseMiddleware {
 
     public async handler(req: IUserRequest, res: Response, next: NextFunction) {
         try {
-            const token = <string>req.headers['authorization'];
+            let token = <string>req.headers['authorization'];
             if (!token) {
-                throw new Error('ERR_INVALID_JWT');
+                token = <string>req.body.jwt;
+                if (!token) {
+                    this.logger.info('Request without JWT.');
+                    throw new Error('ERR_INVALID_JWT');
+                }
             }
             const parts = token.split(' ');
             if (parts.length !== 2) {
+                this.logger.info('Request JWT in wrong format.');
                 throw new Error('ERR_INVALID_JWT');
             }
             // inspect the JWT token received from the client
             const scheme = parts[0];
             // inspect the scheme
             if (!/^Bearer$/i.test(scheme)) {
+                this.logger.info('Request JWT in wrong format.');
                 throw new Error('ERR_INVALID_JWT');
             }
             try {
                 const jwtData = await this.jwt.verify(parts[1]);
                 const user = await this.userRepo.findUserById(jwtData.data);
                 if (user === null) {
+                    this.logger.info(`Request of user ID: ${jwtData.data} didn't match.`);
                     throw new Error('ERR_AUTH_FAILED');
                 } else {
                     req.user = user;

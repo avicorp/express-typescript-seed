@@ -10,6 +10,7 @@ export class MongoDbService {
     private config: YamlConfig;
     private client: Connection;
     private logger: Logger;
+    private conection: string = 'mongodb+srv://dbles:OtbLFKGJ9AoDSNmD@mogoles.wh40y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
     public constructor(
         @inject(TYPES.Config) config: YamlConfig,
@@ -31,27 +32,28 @@ export class MongoDbService {
     }
 
     public getConnectionString(): string {
-        if (process.env.MONGODB_ENDPOINT) {
-            return process.env.MONGODB_ENDPOINT
-        } else {
-            const mongoConfig = this.config.mongodb;
-            if (mongoConfig.username && mongoConfig.password && mongoConfig.replicaSetName) {
-                return `mongodb://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?replicaSet=${mongoConfig.replicaSetName}&authSource=admin&authMechanism=SCRAM-SHA-256`;
-            } else if (!mongoConfig.username && !mongoConfig.password && mongoConfig.replicaSetName) {
-                return `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?replicaSet=${mongoConfig.replicaSetName}`;
-            } else if (mongoConfig.username && mongoConfig.password && !mongoConfig.replicaSetName) {
-                return `mongodb://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?authSource=admin&authMechanism=SCRAM-SHA-256`;
-            } else if (!mongoConfig.username && !mongoConfig.password && !mongoConfig.replicaSetName) {
-                return `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}`;
-            } else {
-                throw new Error('ERR_CONFIG_ERROR');
-            }
-        }
+        // if (process.env.MONGODB_ENDPOINT) {
+            // return process.env.MONGODB_ENDPOINT
+        // } else {
+        //     const mongoConfig = this.config.mongodb;
+        //     if (mongoConfig.username && mongoConfig.password && mongoConfig.host) {
+        //         return `mongodb+srv://${mongoConfig.username}:${mongoConfig.password}@mogoles.wh40y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+        //     } else if (!mongoConfig.username && !mongoConfig.password && mongoConfig.replicaSetName) {
+        //         return `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?replicaSet=${mongoConfig.replicaSetName}`;
+        //     } else if (mongoConfig.username && mongoConfig.password && !mongoConfig.replicaSetName) {
+        //         return `mongodb://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?authSource=admin&authMechanism=SCRAM-SHA-256`;
+        //     } else if (!mongoConfig.username && !mongoConfig.password && !mongoConfig.replicaSetName) {
+        //         return `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}`;
+        //     } else {
+        //         throw new Error('ERR_CONFIG_ERROR');
+        //     }
+        // }
+        return this.conection;
     }
 
     public async connectDb(): Promise<void> {
         set('useCreateIndex', true);
-        await connect(this.getConnectionString(), { useNewUrlParser: true });
+        await connect(this.getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true  });
         this.logger.info("MongoDB connected...")
     }
 

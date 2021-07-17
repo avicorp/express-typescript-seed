@@ -6,12 +6,14 @@ jwt:
 mailer:
   host: 'localhost'
   port: 1025
-  username: ''
-  password: ''
+  username: 'testdb'
+  password: 'testdb'
   fromAddress: 'cs@open-fact.com'
   sendEmail: false
 
 mongodb:
-  host: 'localhost'
-  port: 27017
-  dbName: 'testdb'
+  host: ${MONGO-URL}
+  port: 443
+  dbName: 'mogoles'
+  username: ${MONGO-USER-NAME}
+  password: ${MONGO-PASSWORD}

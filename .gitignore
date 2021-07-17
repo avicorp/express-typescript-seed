@@ -136,3 +136,4 @@ lib-cov
 
 yarn.lock
 dist/
+launch.json

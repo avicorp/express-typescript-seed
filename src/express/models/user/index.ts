@@ -25,27 +25,27 @@ export interface IUser extends Document {
 }
 
 const userSchema: Schema = new Schema({
-  billingCardBrand: { type: String },
-  billingCardExpMonth: { type: String },
-  billingCardExpYear: { type: String },
-  billingCardLast4: { type: String },
-  email: { type: String, required: true, unique: true },
-  emailChangeCandidate: { type: String },
-  emailProofToken: { type: String },
+  billingCardBrand: { type: String, trim: true },
+  billingCardExpMonth: { type: String, trim: true },
+  billingCardExpYear: { type: String, trim: true },
+  billingCardLast4: { type: String, trim: true },
+  email: { type: String, trim: true, unique: true },
+  emailChangeCandidate: { type: String, trim: true },
+  emailProofToken: { type: String, trim: true },
   emailProofTokenExpiresAt: { type: Number },
-  emailStatus: { type: String },
-  facebookId: { type: String, unique: true },
-  fullName: { type: String },
-  googleId: { type: String, unique: true },
+  emailStatus: { type: String, trim: true },
+  facebookId: { type: String, trim: true, unique: true, sparse: true },
+  fullName: { type: String, trim: true },
+  googleId: { type: String, trim: true, unique: true, sparse: true },
   hasBillingCard: { type: Boolean },
-  password: { type: String },
-  passwordResetToken: { type: String },
+  password: { type: String, trim: true },
+  passwordResetToken: { type: String, trim: true },
   passwordResetTokenExpiresAt: { type: Number },
-  role: { type: String },
-  stripeCustomerId: { type: String, unique: true },
+  role: { type: String, trim: true },
+  stripeCustomerId: { type: String, trim: true, unique: true, sparse: true },
   telephone: { type: Number },
-  tosAcceptedByIp: { type: String },
-  username: { type: String, required: true, unique: true }
+  tosAcceptedByIp: { type: String, trim: true },
+  username: { type: String, trim: true, required: true, unique: true }
 });
 
 const User: Model<IUser> = model('User', userSchema);

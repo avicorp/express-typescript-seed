@@ -11,6 +11,11 @@ export class UserRepository {
         return user;
     }
 
+    public async findUserByUsername(username: string): Promise<IUser | null> {
+      const user: IUser | null = await User.findOne({ username });
+      return user;
+    }
+
     public async findUserByEmail(email: string): Promise<IUser | null> {
         const user: IUser | null = await User.findOne({ email });
         return user;
@@ -32,5 +37,10 @@ export class UserRepository {
     public async createNewUser(user: IUser): Promise<IUser> {
         const newUser = await User.create(user);
         return newUser;
+    }
+
+    public async deleteUser(email: string) {
+        const deleteStatus = await User.deleteOne({ email });
+        return deleteStatus;
     }
 }
