@@ -10,7 +10,6 @@ export class MongoDbService {
     private config: YamlConfig;
     private client: Connection;
     private logger: Logger;
-    private conection: string = 'mongodb+srv://dbles:OtbLFKGJ9AoDSNmD@mogoles.wh40y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
     public constructor(
         @inject(TYPES.Config) config: YamlConfig,
@@ -21,7 +20,7 @@ export class MongoDbService {
         this.client = connection;
         // register the listener
         this.client.on('connected', () => {
-            this.logger.info(`Successfully connected to MongoDB at host: ${config.mongodb.host}, port: ${config.mongodb.port}, database: ${config.mongodb.dbName}`);
+            this.logger.info(`Successfully connected to MongoDB at host: ${config.mongodb.host}, port: ${config.mongodb.port}`);
         });
         this.client.on('disconnected', () => {
             this.logger.warn('MongoDB disconnected');
@@ -32,23 +31,12 @@ export class MongoDbService {
     }
 
     public getConnectionString(): string {
-        // if (process.env.MONGODB_ENDPOINT) {
-            // return process.env.MONGODB_ENDPOINT
-        // } else {
-        //     const mongoConfig = this.config.mongodb;
-        //     if (mongoConfig.username && mongoConfig.password && mongoConfig.host) {
-        //         return `mongodb+srv://${mongoConfig.username}:${mongoConfig.password}@mogoles.wh40y.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-        //     } else if (!mongoConfig.username && !mongoConfig.password && mongoConfig.replicaSetName) {
-        //         return `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?replicaSet=${mongoConfig.replicaSetName}`;
-        //     } else if (mongoConfig.username && mongoConfig.password && !mongoConfig.replicaSetName) {
-        //         return `mongodb://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}?authSource=admin&authMechanism=SCRAM-SHA-256`;
-        //     } else if (!mongoConfig.username && !mongoConfig.password && !mongoConfig.replicaSetName) {
-        //         return `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.dbName}`;
-        //     } else {
-        //         throw new Error('ERR_CONFIG_ERROR');
-        //     }
-        // }
-        return this.conection;
+        const mongoConfig = this.config.mongodb;
+        if (mongoConfig.username && mongoConfig.password && mongoConfig.host && mongoConfig.port) {
+            return `mongodb+srv://${mongoConfig.username}:${mongoConfig.password}@${mongoConfig.host}:${mongoConfig.port}`;
+        } else {
+            throw new Error('ERR_CONFIG_ERROR');
+        }
     }
 
     public async connectDb(): Promise<void> {

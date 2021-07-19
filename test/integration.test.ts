@@ -1,6 +1,10 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
-import { requiredSubselectionMessage } from 'graphql/validation/rules/ScalarLeafs';
+
+const port = 8080;
+const config = <AxiosRequestConfig>{
+    baseURL: `http://localhost:${port}`
+};
 
 interface UserResponse {
     user: UserObj,
@@ -14,9 +18,6 @@ interface UserObj {
 }
 
 async function insertUsers(): Promise<AxiosResponse<UserResponse>[]> {
-    const config = <AxiosRequestConfig>{
-        baseURL: 'http://localhost:8080'
-    };
     const responses = [];
     for (let i = 0; i < 5; i++) {
         const newUser = {
@@ -35,9 +36,6 @@ async function insertUsers(): Promise<AxiosResponse<UserResponse>[]> {
 }
 
 async function loginUsers(): Promise<AxiosResponse<UserResponse>[]> {
-    const config = <AxiosRequestConfig>{
-        baseURL: 'http://localhost:8080'
-    };
     const responses = [];
     for (let i = 0; i < 5;  i++) {
         let deleteUser = {
@@ -53,10 +51,6 @@ async function loginUsers(): Promise<AxiosResponse<UserResponse>[]> {
 }
 
 async function deleteUsers(jwts :UserResponse[]): Promise<AxiosResponse<UserResponse>[]> {
-    const config = <AxiosRequestConfig>{
-        baseURL: 'http://localhost:8080'
-    };
-
     const responses = [];
     for (let i = 0; i < 5 ; i++) {
         let deleteUser = {
@@ -76,15 +70,35 @@ async function deleteUsers(jwts :UserResponse[]): Promise<AxiosResponse<UserResp
         console.log("Start testing inserting 5 users");
         const responses = await insertUsers();
         const users = responses.map((elem) => { return elem.data });
-        // console.log(users);
-        console.log("Start testing login 7 users, 5 will succeed and 2 will faild.");
+        console.log("Start testing login 5 users");
         const responsesL = await loginUsers();
         const usersJWT= responsesL.map((elem) => { return elem.data });
-        // console.log(usersJWT);
-        console.log("Start testing deleting 7 users, 5 will succeed and 2 will faild.");
+        console.log("Start testing deleting 5 users");
         const responsesD = await deleteUsers(usersJWT);
         const usersD = responsesD.map((elem) => { return elem.data });
-        // console.log(usersD);
+    } catch (err) {
+        console.error(err);
+    }
+    try {
+        console.log("Start testing login 5 users");
+        const responsesL = await loginUsers();
+        const usersJWT= responsesL.map((elem) => { return elem.data });
+    } catch (err) {
+        console.error(err);
+    }
+    try {
+        console.log("Start testing inserting 5 users");
+        const responses = await insertUsers();
+        const users = responses.map((elem) => { return elem.data });
+        console.log("Start testing login 5 users");
+        const responsesL = await loginUsers();
+        const usersJWT= responsesL.map((elem) => { return elem.data });
+        console.log("Start testing deleting 5 users");
+        const responsesD = await deleteUsers(usersJWT);
+        const usersD = responsesD.map((elem) => { return elem.data });
+        console.log("Start testing deleting 5 users");
+        const responsesDFail = await deleteUsers(usersJWT);
+        const usersDFail = responsesDFail.map((elem) => { return elem.data });
     } catch (err) {
         console.error(err);
     }

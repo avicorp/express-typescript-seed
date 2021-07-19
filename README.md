@@ -57,7 +57,15 @@ passport.use(new FacebookTokenStrategy({
 },
 ```
 
-After that, you should be good to go to execute the project by typing the following command.
+After that, you should set mongoDB on your machine or remotely and set the following env variable:
+
+```
+MONGO_PASSWORD 
+MONGO_URL
+MONGO_USER_NAME
+```
+
+Now execute the project by typing the following command:
 
 ```
 yarn dev

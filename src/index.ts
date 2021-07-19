@@ -104,7 +104,7 @@ const logger: Logger = createLogger(<LoggerOptions>{
         app.use(passport.initialize());
         app.use(passport.session());
         // set the logger
-        app.use(morgan('dev'));
+        app.use(morgan('dev')); 
     });
 
     // error handler
@@ -121,9 +121,9 @@ const logger: Logger = createLogger(<LoggerOptions>{
 
     // build the server instance
     const instance = server.build();
-    instance.listen(8080);
+    instance.listen(config.server_port);
     // log to the console to indicate the server has been started
-    logger.info('Server is listening on port 8080');
+    logger.info(`Server is listening on port ${config.server_port}`);
 })();
 
 // listen to all the unhandled rejection

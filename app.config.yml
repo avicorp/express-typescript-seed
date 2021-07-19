@@ -12,8 +12,6 @@ mailer:
   sendEmail: false
 
 mongodb:
-  host: ${MONGO-URL}
-  port: 443
-  dbName: 'mogoles'
-  username: ${MONGO-USER-NAME}
-  password: ${MONGO-PASSWORD}
+  host: init
+  username: init
+  password: init
