@@ -6,7 +6,6 @@ import passportFacebookToken from 'passport-facebook-token';
 import { Logger } from 'winston';
 import { IUser } from '../../../express/models/user';
 import { UserRepository } from '../../repository/user';
-import { IUserRequest } from 'express/interfaces/user';
 import { sleep } from '../../../utils';
 import { TYPES } from '../../../constants';
 
@@ -20,7 +19,6 @@ export class PassportService {
     private queue: Task[];
     private userRepo: UserRepository;
     private logger: Logger;
-    // private userReccuest:IUserRequest;
 
     public constructor(
         @inject(TYPES.UserRepository) userRepo: UserRepository,
@@ -81,7 +79,7 @@ export class PassportService {
             (async (email, password, done) => {
                 const user = await this.userRepo.findUserByEmail(email);
                 if (!user) {
-                    return done(null, false, { message: 'Incorrect email.' });
+                    return done(null, false, { message: 'Incorrect email.', });
                 }
 
                 const res = await bcrypt.compare(password, user.password ? user.password : '');

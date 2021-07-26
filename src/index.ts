@@ -13,6 +13,9 @@ import { AuthMiddleware } from './express/middleware';
 // import the DAO class
 import { UserRepository } from './express/repository/user';
 import { ErrorDescriptionRepository } from './express/repository/error';
+import { PodRepository } from './express/repository/pod';
+import { ControllerRepository } from './express/repository/controller';
+import { RepositoryRepository } from './express/repository/repository';
 // import other services
 import { Config, YamlConfig } from './express/services/yaml';
 import { DateTimeService } from './express/services/datetime';
@@ -23,6 +26,8 @@ import { PassportService } from './express/services/passport';
 import { MailerService } from './express/services/mailer';
 import { MongoDbService } from './express/services/mongodb';
 import { TYPES } from './constants';
+import { LifeCycle } from './express/services/lifeCycle';
+import { LamdaLoaderService } from './express/services/lamdaLoader';
 // import the controller
 import './express/controllers/user';
 import './express/controllers/auth';
@@ -65,7 +70,9 @@ const logger: Logger = createLogger(<LoggerOptions>{
     // bind the DAO class
     container.bind<UserRepository>(TYPES.UserRepository).to(UserRepository).inSingletonScope();
     container.bind<ErrorDescriptionRepository>(TYPES.ErrorDescriptionRepository).to(ErrorDescriptionRepository).inSingletonScope();
-
+    container.bind<PodRepository>(TYPES.PodRepository).to(PodRepository).inSingletonScope();
+    container.bind<ControllerRepository>(TYPES.ControllerRepository).to(ControllerRepository).inSingletonScope();
+    container.bind<RepositoryRepository>(TYPES.RepositoryRepository).to(RepositoryRepository).inSingletonScope();
     // bind other services
     // container.bind<DateTimeService>(TYPES.DateTimeService).to(DateTimeService).inSingletonScope();
     container.bind<ErrorHandlerService>(TYPES.ErrorHandlerService).to(ErrorHandlerService).inSingletonScope();
@@ -74,13 +81,24 @@ const logger: Logger = createLogger(<LoggerOptions>{
     // container.bind<MailerService>(TYPES.MailerService).to(MailerService).inSingletonScope();
     container.bind<MongoDbService>(TYPES.MongoDbService).to(MongoDbService).inSingletonScope();
     container.bind<PassportService>(TYPES.PassportService).to(PassportService).inSingletonScope();
-
+    container.bind<LifeCycle>(TYPES.LifeCycle).to(LifeCycle).inSingletonScope();
+    container.bind<LamdaLoaderService>(TYPES.LamdaLoaderService).to(LamdaLoaderService).inSingletonScope();
     // configure mongodb and connect to it
     const mongodb = container.get<MongoDbService>(TYPES.MongoDbService);
     await mongodb.connectDb()
     // configure PassportJS config and start the create user loop
     const passportConfig = container.get<PassportService>(TYPES.PassportService);
     passportConfig.init()
+
+    // configure pod life cycle 
+    const lifeCycle = container.get<LifeCycle>(TYPES.LifeCycle);
+    await lifeCycle.initPod()
+
+    // load resources 
+    const lamdaLoaderService = container.get<LamdaLoaderService>(TYPES.LamdaLoaderService);
+    
+    await lamdaLoaderService.loadRepositories(container);
+    await lamdaLoaderService.loadControllers();
 
     // bind the express middleware
     container.bind<AuthMiddleware>(TYPES.AuthMiddleware).to(AuthMiddleware);
@@ -122,6 +140,7 @@ const logger: Logger = createLogger(<LoggerOptions>{
     // build the server instance
     const instance = server.build();
     instance.listen(config.server_port);
+    lifeCycle.onlinePod();
     // log to the console to indicate the server has been started
     logger.info(`Server is listening on port ${config.server_port}`);
 })();

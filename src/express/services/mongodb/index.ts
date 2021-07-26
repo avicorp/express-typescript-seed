@@ -41,7 +41,7 @@ export class MongoDbService {
 
     public async connectDb(): Promise<void> {
         set('useCreateIndex', true);
-        await connect(this.getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true  });
+        await connect(this.getConnectionString(), { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
         this.logger.info("MongoDB connected...")
     }
 

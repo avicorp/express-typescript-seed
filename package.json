@@ -27,14 +27,17 @@
     "@types/passport-local": "^1.0.34",
     "@types/stripe": "^6.25.6",
     "jest": "^27.0.6",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.1.0",
     "tslint-config-airbnb": "^5.11.1",
-    "typescript": "^3.6.2"
+    "typescript": "^3.9.10"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "build": "rm -rf dist && tsc --skipLibCheck",
     "start": "node dist/index.js",
-    "test": "nodemon --watch '.' --exec 'ts-node  ./test/integration.test.ts' --delay 10 --ext ts"
+    "test": "nodemon --watch '.' --exec 'ts-node  ./test/integration.test.ts' --delay 10 --ext ts",
+    "jest": "npx jest --watch"
   },
   "dependencies": {
     "@google/maps": "^0.5.5",
@@ -62,7 +65,7 @@
     "reflect-metadata": "^0.1.13",
     "stripe": "^6.28.0",
     "swagger-ui-dist": "^3.22.1",
-    "ts-node": "^8.10.2",
+    "vm2": "^3.9.3",
     "winston": "^3.2.1"
   }
 }

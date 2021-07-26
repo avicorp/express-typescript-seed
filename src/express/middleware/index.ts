@@ -32,12 +32,14 @@ export class AuthMiddleware extends BaseMiddleware {
                 token = <string>req.body.jwt;
                 if (!token) {
                     this.logger.info('Request without JWT.');
+                    res.status(401).send('Unautorized - missing jwt.');
                     throw new Error('ERR_INVALID_JWT');
                 }
             }
             const parts = token.split(' ');
             if (parts.length !== 2) {
                 this.logger.info('Request JWT in wrong format.');
+                res.status(401).send('Unautorized - Invalid jwt(wrong format).');
                 throw new Error('ERR_INVALID_JWT');
             }
             // inspect the JWT token received from the client
@@ -45,6 +47,7 @@ export class AuthMiddleware extends BaseMiddleware {
             // inspect the scheme
             if (!/^Bearer$/i.test(scheme)) {
                 this.logger.info('Request JWT in wrong format.');
+                res.status(401).send('Unautorized - Invalid jwt(wrong format).');
                 throw new Error('ERR_INVALID_JWT');
             }
             try {
@@ -52,16 +55,19 @@ export class AuthMiddleware extends BaseMiddleware {
                 const user = await this.userRepo.findUserById(jwtData.data);
                 if (user === null) {
                     this.logger.info(`Request of user ID: ${jwtData.data} didn't match.`);
+                    res.status(401).send('Unautorized user.');
                     throw new Error('ERR_AUTH_FAILED');
                 } else {
                     req.user = user;
                 }
             } catch (err) {
                 this.logger.error(err);
+                res.status(401).send('Unautorized user.');
                 throw new Error('ERR_AUTH_FAILED');
             }
             next();
         } catch (err) {
+            // err.status = 401
             next(err);
         }
     }

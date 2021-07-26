@@ -28,7 +28,7 @@ export class UserController {
         @request() req: Request,
         @response() res: Response): Promise<Response>
     {
-        const error =  await this.userRepo.deleteUser(req.body.email);
-        return res.send(error);
+        const result =  await this.userRepo.deleteUser(req.body.email);
+        return res.send(result);
     }
 }
