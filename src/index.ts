@@ -14,7 +14,7 @@ import { AuthMiddleware } from './express/middleware';
 import { UserRepository } from './express/repository/user';
 import { ErrorDescriptionRepository } from './express/repository/error';
 import { PodRepository } from './express/repository/pod';
-import { ControllerRepository } from './express/repository/controller';
+import { ControlleresRepository } from './express/repository/controller';
 import { RepositoryRepository } from './express/repository/repository';
 // import other services
 import { Config, YamlConfig } from './express/services/yaml';
@@ -33,6 +33,7 @@ import './express/controllers/user';
 import './express/controllers/auth';
 import './express/controllers/health';
 import './express/controllers/error';
+import './express/controllers/resources';
 import { Format } from 'logform';
 
 // configure the winston logger
@@ -71,7 +72,7 @@ const logger: Logger = createLogger(<LoggerOptions>{
     container.bind<UserRepository>(TYPES.UserRepository).to(UserRepository).inSingletonScope();
     container.bind<ErrorDescriptionRepository>(TYPES.ErrorDescriptionRepository).to(ErrorDescriptionRepository).inSingletonScope();
     container.bind<PodRepository>(TYPES.PodRepository).to(PodRepository).inSingletonScope();
-    container.bind<ControllerRepository>(TYPES.ControllerRepository).to(ControllerRepository).inSingletonScope();
+    container.bind<ControlleresRepository>(TYPES.ControlleresRepository).to(ControlleresRepository).inSingletonScope();
     container.bind<RepositoryRepository>(TYPES.RepositoryRepository).to(RepositoryRepository).inSingletonScope();
     // bind other services
     // container.bind<DateTimeService>(TYPES.DateTimeService).to(DateTimeService).inSingletonScope();

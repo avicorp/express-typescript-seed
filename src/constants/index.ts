@@ -14,7 +14,7 @@ export var TYPES:any = {
     UserRepository: Symbol('UserRepository'),
     ErrorDescriptionRepository: Symbol('ErrorDescriptionRepository'),
     PodRepository: Symbol('PodRepository'),
-    ControllerRepository: Symbol('ControllerRepository'),
+    ControlleresRepository: Symbol('ControlleresRepository'),
     RepositoryRepository: Symbol('RepositoryRepository'),
     // Logger
     WinstonLogger: Symbol('WinstonLogger'),

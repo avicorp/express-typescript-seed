@@ -13,7 +13,6 @@ export class UserController {
 
     private userRepo: UserRepository;
     private logger: Logger;
-    // private userReccuest:IUserRequest;
 
     public constructor(
         @inject(TYPES.UserRepository) userRepo: UserRepository,

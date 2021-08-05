@@ -6,11 +6,6 @@ const config = <AxiosRequestConfig>{
     baseURL: `http://localhost:${port}`
 };
 
-const code = `exports.systemContoller = void 0;
-    console.log("test test");`
-
-const run = Function("exports", code);
-
 interface UserResponse {
     user: UserObj,
     jwt: String
@@ -20,6 +15,11 @@ interface UserObj {
     email: string,
     fullName: string,
     id: string
+}
+
+async function insertUser(newUser: Object): Promise<AxiosResponse<UserResponse>> {
+    const response = axios.post<UserResponse>('/api/v1/auth/signup', newUser, config);
+    return response;
 }
 
 async function insertUsers(): Promise<AxiosResponse<UserResponse>[]> {
@@ -33,12 +33,24 @@ async function insertUsers(): Promise<AxiosResponse<UserResponse>[]> {
             facebookId: `test${i}`,
         };
 
-        const response = axios.post<UserResponse>('/api/v1/auth/signup', newUser, config);
+        const response = insertUser(newUser);
         responses.push(response);
     }
     const result = Promise.all(responses);
     return result;
 }
+
+async function newSystemUser() {
+    const newUser = {
+        email: `system@mongoless.com`,
+        password: 'activeONE!',
+        fullName: `system`,
+        username: `system`
+    };
+    insertUser(newUser);
+}
+
+newSystemUser();
 
 async function loginUsers(): Promise<AxiosResponse<UserResponse>[]> {
     const responses = [];
@@ -76,25 +88,11 @@ async function testVM(): Promise<AxiosResponse<UserResponse>> {
     return result
 }
 
-async function testNEWController(): Promise<AxiosResponse<UserResponse>> {
-    // const responseNEW = axios.post<UserResponse>('/api/v1/system/setNewControler', {}, config);
-    // const resultNEW = Promise.resolve(responseNEW);
-    // console.log(resultNEW);
-    const response = axios.get<UserResponse>('/api/v1/new/getNewAPI', config);
-    const result = Promise.resolve(response);
-    return result
-}
-
 async function testHealthController(): Promise<AxiosResponse<UserResponse>> {
     const response = axios.get<any>('/api/v1/health/', config);
     const result = Promise.resolve(response);
     return result
 }
-
-test('test new controller.', async () => {
-    const responsesNewController = await testNEWController();
-    expect(responsesNewController.data).toMatch("newAPI");
-})
 
 test('health Of pod.', async () => {
     const responsesHealth = await testHealthController();
